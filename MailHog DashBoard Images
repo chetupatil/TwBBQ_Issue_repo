@@ -1,0 +1,38 @@
+MailHog MailHog
+Search
+GitHub GitHub
+ Connected
+Inbox (1)
+ Delete all messages
+Jim
+Jim is a chaos monkey.
+Find out more at GitHub.
+
+    
+From	TWBBQ Issues <issues@twbbq.local>
+Subject	New Issue Reported: 57efe393-90a2-47f5-a7d6-dc3d9b7253a9
+To	venue-a-user@twbbq.local, venue-a-user@twbbq.local, headoffice@twbbq.local
+HTML
+Plain text
+Source
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=utf-8
+Date: Sun, 06 Sep 2026 06:09:39 +0000
+From: TWBBQ Issues <issues@twbbq.local>
+MIME-Version: 1.0
+Message-ID: <0222d7cf-37e5-cad9-e637-bf303ae54348@twbbq.local>
+Received: from Jordans-MacBook-Pro.local by mailhog.example (MailHog)
+          id fmUdOUj9AZdXYz3ikQ0vw6mApL0RZqKFsmajxlyHDD4=@mailhog.example; Sun, 06 Sep 2026 06:09:39 +0000
+Return-Path: <issues@twbbq.local>
+Subject: New Issue Reported: 57efe393-90a2-47f5-a7d6-dc3d9b7253a9
+To: venue-a-user@twbbq.local, venue-a-user@twbbq.local, headoffice@twbbq.local
+
+<html><head></head><body><p>A new issue has been reported.</p>
+<ul>
+  <li>Issue ID: 57efe393-90a2-47f5-a7d6-dc3d9b7253a9</li>
+  <li>Description: Broken fridge</li>
+  <li>Priority: HIGH</li>
+  <li>Due: Tue Sep 01 2026 10:00:00 GMT+1000 (Australian Eastern Standard =
+Time)</li>
+</ul>
+</body></html>

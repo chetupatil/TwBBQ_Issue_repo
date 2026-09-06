@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: twbbq
+      POSTGRES_USER: twbbq
+      POSTGRES_PASSWORD: twbbq
+    ports:
+      - '5432:5432'
+    volumes:
+      - twbbq_pg_data:/var/lib/postgresql/data
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '1025:1025' # SMTP
+      - '8025:8025' # Web UI to view sent emails
+
+volumes:
+  twbbq_pg_data:

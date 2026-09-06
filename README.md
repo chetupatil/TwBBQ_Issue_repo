@@ -133,7 +133,6 @@ TwBBQ_Issue_repo/
 ├── mailhog-dashboard.png
 ├── issue-list.png
 ├── create-issue.png
-└── issue-details.png
 │
 ├── .gitignore
 └── README.md
@@ -158,14 +157,6 @@ The issue list displays issues available to the authenticated user according to 
 The create issue screen allows an authorized user to provide the issue description, priority, assignment and due date.
 
 ![Create Issue](/create-issue.png)
-
----
-
-## Issue Details
-
-The issue details screen provides the information required to review and manage an issue.
-
-![Issue Details](/issue-details.png)
 
 ---
 

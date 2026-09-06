@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TWBBQ Issues Feature
 
 ## Inspection step — why it's skipped, and what's assumed instead
@@ -41,3 +42,6 @@ and:
 
 The service never reads a client-supplied `venue_id` for a `VENUE` user; it
 only reads `req.venueScope`, which the guard sets server-side from the JWT.
+=======
+# TwBBQ_Issue_repo
+>>>>>>> 795c45c1644d6015f0f40e14a0226d16691efa97

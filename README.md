@@ -129,12 +129,11 @@ TwBBQ_Issue_repo/
 ├── frontend/
 │   └── ...
 │
-├── docs/
-│   └── images/
-│       ├── mailhog-dashboard.png
-│       ├── issue-list.png
-│       ├── create-issue.png
-│       └── issue-details.png
+├
+├── mailhog-dashboard.png
+├── issue-list.png
+├── create-issue.png
+└── issue-details.png
 │
 ├── .gitignore
 └── README.md
@@ -150,7 +149,7 @@ TwBBQ_Issue_repo/
 
 The issue list displays issues available to the authenticated user according to their venue permissions.
 
-![Issue List](docs/images/issue-list.png)
+![Issue List](/issue-list.png)
 
 ---
 
@@ -158,7 +157,7 @@ The issue list displays issues available to the authenticated user according to 
 
 The create issue screen allows an authorized user to provide the issue description, priority, assignment and due date.
 
-![Create Issue](docs/images/create-issue.png)
+![Create Issue](/create-issue.png)
 
 ---
 
@@ -166,7 +165,7 @@ The create issue screen allows an authorized user to provide the issue descripti
 
 The issue details screen provides the information required to review and manage an issue.
 
-![Issue Details](docs/images/issue-details.png)
+![Issue Details](/issue-details.png)
 
 ---
 
@@ -176,7 +175,7 @@ MailHog is used during local development to capture outgoing emails without send
 
 The MailHog dashboard can be used to verify the recipient, subject and email content.
 
-![MailHog Dashboard](docs/images/mailhog-dashboard.png)
+![MailHog Dashboard](/mailhog-dashboard.png)
 
 MailHog is particularly useful for testing email functionality locally without sending messages to real users.
 

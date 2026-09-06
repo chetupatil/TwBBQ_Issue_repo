@@ -107,8 +107,9 @@ Authorization is enforced by the backend before data is returned or modified.
 
 ---
 
-# Project Structure
+## Project Structure
 
+```text
 TwBBQ_Issue_repo/
 │
 ├── backend/
@@ -143,7 +144,6 @@ TwBBQ_Issue_repo/
 │
 ├── .gitignore
 └── README.md
-```
 
 > The project structure above should match the actual files committed to the repository.
 

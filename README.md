@@ -109,7 +109,6 @@ Authorization is enforced by the backend before data is returned or modified.
 
 # Project Structure
 
-```text
 TwBBQ_Issue_repo/
 │
 ├── backend/
@@ -121,18 +120,26 @@ TwBBQ_Issue_repo/
 │   │   └── ...
 │   │
 │   ├── test/
+│   │   └── venue-scope.guard.spec.ts
+│   │
 │   ├── migrations/
+│   │
 │   ├── package.json
+│   ├── package-lock.json
 │   ├── docker-compose.yml
+│   ├── .env.example
 │   └── ...
 │
 ├── frontend/
 │   └── ...
 │
-├
-├── mailhog-dashboard.png
-├── issue-list.png
-├── create-issue.png
+├── docs/
+│   └── images/
+│       ├── issue-list.png
+│       ├── create-issue.png
+│       ├── mailhog-dashboard.png
+│       ├── backend-running.png
+│       └── automated-tests.png
 │
 ├── .gitignore
 └── README.md
@@ -148,7 +155,7 @@ TwBBQ_Issue_repo/
 
 The issue list displays issues available to the authenticated user according to their venue permissions.
 
-![Issue List](/issue-list.png)
+![Issue List](/docs/images/issue-list.png)
 
 ---
 
@@ -156,7 +163,7 @@ The issue list displays issues available to the authenticated user according to 
 
 The create issue screen allows an authorized user to provide the issue description, priority, assignment and due date.
 
-![Create Issue](/create-issue.png)
+![Create Issue](/docs/images/create-issue.png)
 
 ---
 
@@ -166,9 +173,26 @@ MailHog is used during local development to capture outgoing emails without send
 
 The MailHog dashboard can be used to verify the recipient, subject and email content.
 
-![MailHog Dashboard](/mailhog-dashboard.png)
+![MailHog Dashboard](/docs/images/mailhog-dashboard.png)
 
 MailHog is particularly useful for testing email functionality locally without sending messages to real users.
+
+---
+### Backend Running Locally
+
+The NestJS backend was successfully started using the development server.
+
+![Backend Running Locally](/docs/images/backend-running.png)
+
+---
+
+### Automated Security Tests
+
+The venue-scope security tests were executed successfully.
+
+The test suite verifies cross-venue access protection, venue scoping, non-existent issue handling, and Head Office access.
+
+![Automated Tests](/docs/images/automated-tests.png)
 
 ---
 

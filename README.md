@@ -1,113 +1,128 @@
 # TWBBQ Issues
 
-A venue-aware maintenance and operational issue management application for Third Wave BBQ.
+A backend service for managing venue maintenance issues, including issue creation, assignment, priority, status, due dates, venue-level access control, authentication, and operational notifications.
 
-The application allows authenticated users to create, manage, assign and track maintenance issues while enforcing strict venue-level access control.
-
-The implementation focuses on:
-
-* Authentication and authorization
-* Venue-level data isolation
-* Issue management
-* PostgreSQL persistence
-* Database migrations
-* Automated security testing
-* Docker-based local development
-* Email testing with MailHog
-* Safe deployment and rollback considerations
+This project was developed as part of the **Third Wave BBQ Graduate Software Developer, AI & Automation assessment**.
 
 ---
 
-## Tech Stack
+## Overview
 
-### Frontend
+The application provides a centralised issue-management system for restaurant venues.
 
-* Next.js
-* TypeScript
+Venue users can create and manage issues within their authorised venue, while Head Office users can access issues across venues.
+
+The system focuses on:
+
+* Venue-level data isolation
+* Authentication and authorisation
+* Issue creation and management
+* Issue assignment
+* Priority and status management
+* Due dates
+* Comments
+* Automated testing
+* Email notification support
+* Secure deployment practices
+* AI-assisted development with human review
+
+---
+
+## Technology Stack
 
 ### Backend
 
 * NestJS
 * TypeScript
-* REST APIs
-* JWT authentication
 * TypeORM
-
-### Database
-
-* PostgreSQL 16
-
-### Testing
-
+* PostgreSQL
+* JWT Authentication
 * Jest
-* Supertest
 
-### Infrastructure
+### Frontend
+
+* Next.js
+* React
+* TypeScript
+
+### Development / Infrastructure
 
 * Docker
 * Docker Compose
-* Ubuntu VPS
-
-### Email Development
-
 * MailHog
+* Git / GitHub
+* Ubuntu VPS
 
 ---
 
 # Features
 
-The application supports:
+## Issue Management
 
-* User authentication
+Users can:
+
 * Create issues
 * View issues
 * Update issues
-* Assign issues to users
+* Assign issues
 * Set issue priority
+* Set issue status
 * Set due dates
-* Update issue status
-* Venue-level access control
-* Head Office access across venues
-* PostgreSQL persistence
-* Database migrations
-* Seed data
-* Automated authorization tests
-* Local email testing with MailHog
+* Add comments
+* Associate issues with a venue
+
+## Venue Access Control
+
+Venue users can only access issues belonging to their own venue.
+
+Head Office administrators can access issues across venues.
+
+The backend determines the venue scope from the authenticated user's JWT rather than trusting a venue ID supplied by the client.
+
+Cross-venue issue access returns `404 Not Found` to avoid exposing whether an issue exists in another venue.
 
 ---
 
 # Architecture
 
+The application follows a standard frontend/backend architecture.
+
 ```text
-                         ┌──────────────────┐
-                         │     Next.js      │
-                         │    Frontend      │
-                         └────────┬─────────┘
-                                  │
-                             REST / JWT
-                                  │
-                                  ▼
-                         ┌──────────────────┐
-                         │     NestJS       │
-                         │     Backend      │
-                         └────────┬─────────┘
-                                  │
-                         ┌────────┴─────────┐
-                         │                  │
-                         ▼                  ▼
-                  ┌─────────────┐    ┌─────────────┐
-                  │ PostgreSQL  │    │   MailHog   │
-                  │  Database   │    │ Email Inbox │
-                  └─────────────┘    └─────────────┘
+                    ┌──────────────────┐
+                    │   Next.js UI     │
+                    │    Frontend      │
+                    └────────┬─────────┘
+                             │
+                             │ HTTP / REST
+                             ▼
+                    ┌──────────────────┐
+                    │    NestJS API    │
+                    │     Backend      │
+                    └────────┬─────────┘
+                             │
+             ┌───────────────┼────────────────┐
+             │               │                │
+             ▼               ▼                ▼
+       ┌──────────┐    ┌───────────┐    ┌──────────┐
+       │   Auth   │    │  Issues   │    │  Users   │
+       │  Module  │    │  Module   │    │ /Venues  │
+       └──────────┘    └─────┬─────┘    └──────────┘
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │   PostgreSQL     │
+                    └──────────────────┘
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │     MailHog      │
+                    │ Local Email Test │
+                    └──────────────────┘
 ```
-
-The frontend is not treated as a security boundary.
-
-Authorization is enforced by the backend before data is returned or modified.
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 TwBBQ_Issue_repo/
@@ -144,81 +159,25 @@ TwBBQ_Issue_repo/
 │
 ├── .gitignore
 └── README.md
-
-> The project structure above should match the actual files committed to the repository.
-
----
-
-# Screenshots
-
-## Issue List
-
-The issue list displays issues available to the authenticated user according to their venue permissions.
-
-![Issue List](/docs/images/issue-list.png)
+```
 
 ---
 
-## Create Issue
+# Prerequisites
 
-The create issue screen allows an authorized user to provide the issue description, priority, assignment and due date.
+The following tools are required for local development:
 
-![Create Issue](/docs/images/create-issue.png)
-
----
-
-## MailHog Dashboard
-
-MailHog is used during local development to capture outgoing emails without sending real emails.
-
-The MailHog dashboard can be used to verify the recipient, subject and email content.
-
-![MailHog Dashboard](/docs/images/mailhog-dashboard.png)
-
-MailHog is particularly useful for testing email functionality locally without sending messages to real users.
-
----
-### Backend Running Locally
-
-The NestJS backend was successfully started using the development server.
-
-![Backend Running Locally](/docs/images/backend-running.png)
-
----
-
-### Automated Security Tests
-
-The venue-scope security tests were executed successfully.
-
-The test suite verifies cross-venue access protection, venue scoping, non-existent issue handling, and Head Office access.
-
-![Automated Tests](/docs/images/automated-tests.png)
+* Node.js
+* npm
+* Docker
+* Docker Compose
+* Git
 
 ---
 
 # Local Development
 
-## Prerequisites
-
-Install:
-
-* Node.js
-* npm
-* Docker Desktop / Docker Engine
-* Git
-
-Verify the installation:
-
-```bash
-node --version
-npm --version
-docker --version
-git --version
-```
-
----
-
-# Clone the Repository
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/chetupatil/TwBBQ_Issue_repo.git
@@ -227,7 +186,7 @@ cd TwBBQ_Issue_repo
 
 ---
 
-# Backend Setup
+## 2. Install Backend Dependencies
 
 ```bash
 cd backend
@@ -236,119 +195,80 @@ npm install
 
 ---
 
-# Environment Configuration
+## 3. Configure Environment Variables
 
-Create a local environment file:
+Create the local environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Configure the required local values.
+Configure the required database, JWT and application settings.
 
 Example:
 
 ```env
-PORT=3001
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_NAME=twbbq
 
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=<your-db-user>
-DB_PASSWORD=<your-db-password>
-DB_DATABASE=<your-db-name>
-
-JWT_SECRET=<your-local-secret>
+JWT_SECRET=change-me
 ```
 
-## Security
-
-Never commit:
-
-* `.env`
-* database passwords
-* JWT secrets
-* access tokens
-* API keys
-* private keys
-* production credentials
-
-Only `.env.example` should be committed.
+Secrets should never be committed to Git.
 
 ---
 
 # Start PostgreSQL and MailHog
 
-From the backend directory:
+Run:
 
 ```bash
 docker compose up -d
 ```
 
-Check the containers:
+This starts the required development services.
+
+Typical services include:
+
+* PostgreSQL
+* MailHog
+
+Check running containers:
 
 ```bash
 docker compose ps
 ```
 
-View logs:
-
-```bash
-docker compose logs
-```
-
-Stop the containers:
-
-```bash
-docker compose down
-```
-
-To remove local containers and database volumes:
-
-```bash
-docker compose down -v
-```
-
-> `docker compose down -v` should only be used when intentionally removing local database data.
-
 ---
 
-# Database Migration
-
-Run the database migrations:
+# Run Database Migrations
 
 ```bash
 npm run migration:run
 ```
 
-The database contains the entities required for issue management, including:
-
-* Users
-* Venues
-* Issues
-
-Issues are associated with a venue and can be associated with an assigned user.
+Migrations create the required database tables and indexes.
 
 ---
 
-# Seed Data
-
-Run:
+# Seed Development Data
 
 ```bash
 npm run seed
 ```
 
-The seed creates development data for testing different access levels, including venue users and Head Office users.
+The seed creates development users, venues and sample data.
 
-Example development users:
+Example users include:
 
 ```text
 venue-a-user@twbbq.local
 venue-b-user@twbbq.local
 admin@twbbq.local
 ```
-
-Development credentials/tokens should never be used in production.
 
 ---
 
@@ -358,309 +278,406 @@ Development credentials/tokens should never be used in production.
 npm run start:dev
 ```
 
-The API runs on:
+The NestJS API starts in development mode.
+
+---
+
+# Run Automated Tests
+
+```bash
+npm test
+```
+
+The venue-scope security tests verify:
+
+1. A venue user cannot access another venue's issue.
+2. A venue user can access an issue belonging to their own venue.
+3. Non-existent issues return `404`.
+4. Client-supplied `venueId` cannot override the authenticated user's venue.
+5. Venue scope is applied even when the client does not provide a venue filter.
+6. Head Office administrators can access issues across venues.
+
+Current test result:
 
 ```text
-http://localhost:3001
+Test Suites: 1 passed, 1 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        6.353 s
+Ran all test suites.
 ```
 
 ---
 
 # API Endpoints
 
-| Method | Endpoint               | Purpose           |
-| ------ | ---------------------- | ----------------- |
-| GET    | `/issues`              | List issues       |
-| GET    | `/issues/:id`          | Get an issue      |
-| POST   | `/issues`              | Create an issue   |
-| PATCH  | `/issues/:id`          | Update an issue   |
-| PATCH  | `/issues/:id/reassign` | Reassign an issue |
-
-Protected endpoints require:
+## List Issues
 
 ```http
-Authorization: Bearer <TOKEN>
+GET /issues
+```
+
+Returns issues available to the authenticated user according to their access scope.
+
+---
+
+## Get Issue
+
+```http
+GET /issues/:id
+```
+
+Returns a specific issue.
+
+Venue users can only retrieve issues belonging to their own venue.
+
+---
+
+## Create Issue
+
+```http
+POST /issues
+```
+
+Creates a new issue.
+
+Example request:
+
+```json
+{
+  "description": "Freezer is not maintaining the required temperature",
+  "priority": "HIGH",
+  "assignedUserId": "user-id",
+  "dueDate": "2026-09-10"
+}
 ```
 
 ---
 
-# Create an Issue
+## Update Issue
 
-Example:
-
-```bash
-curl -X POST http://localhost:3001/issues \
-  -H "Authorization: Bearer <VENUE_A_TOKEN>" \
-  -F issueDesc="Broken fridge" \
-  -F issuePriority=HIGH \
-  -F assignedUserId="<USER_ID>" \
-  -F dueDate=2026-09-15
+```http
+PATCH /issues/:id
 ```
 
-The backend authenticates the user and determines the user's venue from trusted authentication information.
+Updates issue information such as:
 
-The client cannot choose another venue simply by supplying a different `venueId`.
+* Description
+* Priority
+* Status
+* Due date
+* Assignment
 
 ---
 
-# List Issues
+## Reassign Issue
 
-```bash
-curl http://localhost:3001/issues \
-  -H "Authorization: Bearer <TOKEN>"
+```http
+PATCH /issues/:id/reassign
 ```
 
-### Venue User
-
-A venue user can only access issues belonging to their own venue.
-
-### Head Office
-
-A Head Office user can access issues across venues according to their role.
+Reassigns an issue to an authorised user.
 
 ---
 
-# Get an Issue
+# Database Design
 
-```bash
-curl http://localhost:3001/issues/<ISSUE_ID> \
-  -H "Authorization: Bearer <TOKEN>"
+The main entities are:
+
+```text
+Venue
+  │
+  ├── Users
+  │
+  └── Issues
+         │
+         └── Assigned User
 ```
 
-The backend validates authorization before returning the issue.
+The issue table contains relationships to:
+
+* Venue
+* Assigned User
+
+The database uses foreign keys to maintain referential integrity.
 
 ---
 
-# Update an Issue
+# Database Indexes
 
-Example:
+Indexes are used for commonly queried fields.
 
-```bash
-curl -X PATCH http://localhost:3001/issues/<ISSUE_ID> \
-  -H "Authorization: Bearer <TOKEN>" \
-  -F issuePriority=MEDIUM
+Examples:
+
+```text
+idx_issue_venue_id
+idx_issue_assigned_user_id
+idx_issue_due_date_status
 ```
 
-Authorization is checked before the issue is modified.
+These indexes support:
 
----
-
-# Reassign an Issue
-
-```bash
-curl -X PATCH http://localhost:3001/issues/<ISSUE_ID>/reassign \
-  -H "Authorization: Bearer <TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "assignedUserId": "<USER_ID>"
-  }'
-```
-
-The backend validates that the authenticated user is permitted to perform the operation.
+* Venue-based issue filtering
+* Assigned-user filtering
+* Overdue issue queries
+* Status filtering
 
 ---
 
 # Security and Venue Isolation
 
-Venue isolation is one of the most important security requirements.
+Venue isolation is enforced on the backend.
 
-A venue employee must only be able to access issues belonging to their own venue.
+A client should never be trusted to determine its own data access scope.
 
-The backend therefore does **not** trust a client-supplied `venueId` when determining authorization.
+For example, the following request must not allow a Venue A user to retrieve Venue B data:
 
-Instead:
+```http
+GET /issues?venueId=venue-b
+```
+
+Instead, the backend obtains the user's venue from the authenticated JWT/session context.
+
+Conceptually:
 
 ```text
 Authenticated User
         │
         ▼
-JWT / Authentication Context
+     JWT Claims
         │
         ▼
-Determine User's Venue
+   User Venue ID
         │
         ▼
-Apply Venue Scope
+ Backend Venue Scope
         │
         ▼
-Query / Modify Issue
+   Database Query
 ```
 
-The frontend may filter or display information, but the backend remains the final security boundary.
+This prevents users from changing a query parameter to access another venue.
 
 ---
 
-# Cross-Venue Access Protection
+# Why Cross-Venue Access Returns 404
 
-An unsafe implementation could use a client-controlled value:
+For a venue user attempting to access another venue's issue, the API returns:
 
-```javascript
-const venueId = req.query.venueId;
-
-const issues = await db.issue.findMany({
-  where: venueId ? { venueId } : {}
-});
-```
-
-This is unsafe because a venue user could potentially modify the request and provide another venue's ID.
-
-For example:
-
-```text
-GET /api/issues?venueId=<ANOTHER_VENUE>
-```
-
-The backend should instead derive the venue scope from trusted authentication information.
-
-This prevents users from bypassing authorization by changing request parameters.
-
----
-
-# 404 Behaviour for Cross-Venue Issues
-
-When a venue user attempts to access an issue belonging to another venue, the application returns:
-
-```text
+```http
 404 Not Found
 ```
 
-rather than revealing the existence of the resource through a different response.
+rather than:
 
-This also helps reduce unnecessary information disclosure and issue enumeration.
+```http
+403 Forbidden
+```
 
-Head Office users are permitted to access issues across venues.
+This avoids giving an attacker information about whether an issue exists in another venue.
+
+It also makes a cross-venue issue indistinguishable from a genuinely non-existent issue.
 
 ---
 
-# Automated Tests
+# Automated Security Tests
 
-Run:
-
-```bash
-npm test
-```
-
-The security-focused tests cover:
+The venue-scope guard tests cover the important access-control scenarios.
 
 ```text
-✓ blocks a VENUE user fetching another venue's issue by id (404, not 403)
+PASS test/venue-scope.guard.spec.ts
 
-✓ allows a VENUE user fetching their own venue's issue by id
-
-✓ returns 404 for a non-existent issue id
-
-✓ ignores a client-supplied venueId when determining venue scope
-
-✓ applies venue scope even when the client does not provide a venue filter
-
-✓ allows HEAD_OFFICE_ADMIN to access issues across venues
+VenueScopeGuard
+  ✓ blocks VENUE user fetching another venue's issue by id
+  ✓ allows VENUE user fetching their own venue's issue by id
+  ✓ returns 404 for a non-existent issue id
+  ✓ forces venueScope to the JWT's venueId
+  ✓ forces venueScope when no venue filter is supplied
+  ✓ lets HEAD_OFFICE_ADMIN through across venues
 ```
 
-The tests specifically protect against regression of the venue authorization rules.
+---
 
-Example result:
+# Local Testing Evidence
+
+The application was tested locally using the NestJS development server, Docker, PostgreSQL, MailHog and Jest automated tests.
+
+## Issue List
+
+The issue list displays issues available to the authenticated user according to their venue permissions.
+
+![Issue List](docs/images/issue-list.png)
+
+---
+
+## Create Issue
+
+The create issue screen allows an authorised user to provide the issue description, priority, assignment and due date.
+
+![Create Issue](docs/images/create-issue.png)
+
+---
+
+## MailHog Dashboard
+
+MailHog is used during local development to capture outgoing emails without sending real emails.
+
+The MailHog dashboard can be used to verify the recipient, subject and email content.
+
+![MailHog Dashboard](docs/images/mailhog-dashboard.png)
+
+MailHog is particularly useful for testing email functionality locally without sending messages to real users.
+
+---
+
+## Backend Running Locally
+
+The NestJS backend was successfully started using the development server.
+
+![Backend Running Locally](docs/images/backend-running.png)
+
+---
+
+## Automated Security Tests
+
+The venue-scope security tests were executed successfully.
+
+The test suite verifies cross-venue access protection, venue scoping, non-existent issue handling and Head Office access.
+
+![Automated Security Tests](docs/images/automated-tests.png)
+
+Test result:
 
 ```text
 Test Suites: 1 passed, 1 total
 Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        6.353 s
+Ran all test suites.
 ```
 
 ---
 
 # Email Testing with MailHog
 
-MailHog is used as the local email testing environment.
+MailHog is used during local development to capture outgoing email messages.
 
-Start the service:
+This allows email functionality to be tested without sending real emails.
 
-```bash
-docker compose up -d
+The local workflow is:
+
+```text
+Application
+     │
+     ▼
+Email Service
+     │
+     ▼
+   MailHog
+     │
+     ▼
+MailHog Web UI
 ```
 
-Check the containers:
-
-```bash
-docker compose ps
-```
-
-MailHog captures application-generated emails so they can be inspected locally.
-
-The dashboard allows developers to verify:
+This makes it possible to verify:
 
 * Recipient
 * Subject
 * Email body
-* Email formatting
-* Email generation behaviour
-
-No real emails are sent during local development.
+* Notification behaviour
 
 ---
 
 # Overdue Issue Reminder Design
 
-The requirement is for overdue issues to generate a daily reminder.
+For production, overdue issue reminders can be implemented using a scheduled background job.
 
-A production implementation can use a scheduled NestJS job or external scheduler:
+The workflow would be:
 
 ```text
 Daily Scheduler
       │
       ▼
-Find Overdue Issues
+Find overdue issues
       │
       ▼
-Exclude Completed / Closed Issues
+Check issue status
       │
       ▼
-Identify Responsible User
+Find assigned user
       │
       ▼
-Send Reminder Email
-      │
-      ▼
-Log / Record Result
+Send reminder email
 ```
 
-The reminder process should run independently from normal issue API requests.
+The query should identify issues where:
 
-MailHog is used for local email testing; production would use the configured email delivery service.
+```text
+due_date < current_time
+AND status NOT IN (resolved, closed)
+```
+
+The reminder process should be idempotent so that the same issue is not repeatedly emailed unnecessarily.
+
+A production implementation could use:
+
+* NestJS scheduler
+* Queue-based processing
+* PostgreSQL query
+* Email service
+* Retry handling
+* Notification tracking
 
 ---
 
 # Photograph Storage
 
-Photographs should not be stored as large binary objects directly in PostgreSQL for a production system.
+Issue photographs should not be stored directly inside PostgreSQL as large binary objects for a production system.
 
-A production approach would use private object storage such as S3-compatible storage and store a reference/metadata in PostgreSQL.
+A better approach is private object storage such as an S3-compatible service.
 
-Example metadata:
+The database would store metadata such as:
 
 ```text
-issueId
-objectKey
-fileName
-contentType
-fileSize
-createdAt
+photo_id
+issue_id
+storage_key
+file_name
+content_type
+created_at
 ```
 
-Uploads should be protected with:
+The actual file would be stored in object storage.
 
-* File type validation
-* File size limits
-* Generated object names
-* Authorization checks
-* Private storage where appropriate
-* Signed URLs when direct access is required
+A secure production flow would be:
 
-The application should never rely on a client-supplied file path as an authorization mechanism.
+```text
+Frontend
+   │
+   ▼
+Backend
+   │
+   ├── Validate file
+   │
+   └── Generate secure upload URL
+             │
+             ▼
+       Private Object Storage
+```
+
+The backend should validate:
+
+* File type
+* File size
+* File ownership
+* Issue ownership
+* Upload permissions
 
 ---
 
 # Deployment Strategy
 
-The feature should be deployed without unnecessarily risking the existing production application or database.
+A production deployment should use a controlled process rather than directly changing the production server.
 
 Recommended workflow:
 
@@ -677,281 +694,378 @@ Code Review
 Automated Tests
       │
       ▼
-Database Backup
+Build Docker Image
       │
       ▼
-Build Docker Image
+Backup Database
       │
       ▼
 Run Migration
       │
       ▼
-Deploy New Version
+Deploy
       │
       ▼
 Health Check
       │
       ▼
 Smoke Test
-      │
-      ▼
-Monitor Logs
 ```
-
-## Production Considerations
-
-* Use a separate Git branch for feature development.
-* Require code review before merging.
-* Run automated tests before deployment.
-* Back up PostgreSQL before database migrations.
-* Use version-controlled migrations.
-* Store secrets outside Git.
-* Use production environment variables securely.
-* Deploy a specific Docker image/version.
-* Verify application health after deployment.
-* Monitor application and database logs.
-* Perform smoke tests after release.
 
 ---
 
 # Database Migration Safety
 
-Production migrations should be designed carefully.
+Before applying a production migration:
 
-Where possible, migrations should be backward-compatible so that an application rollback does not immediately require a destructive database rollback.
+1. Create a database backup.
+2. Review the migration.
+3. Check backward compatibility.
+4. Apply the migration.
+5. Verify the database.
+6. Deploy the application.
+7. Run smoke tests.
 
-Before running a production migration:
+Destructive migrations should be avoided where possible.
 
-1. Confirm the migration has been tested.
-2. Back up the database.
-3. Review the migration SQL/schema changes.
-4. Confirm application compatibility.
-5. Apply the migration.
-6. Verify the application health.
+For example, instead of immediately removing a column:
+
+```text
+Release 1:
+Add replacement column
+      ↓
+Application supports both
+      ↓
+Migrate data
+      ↓
+Release 2:
+Stop using old column
+      ↓
+Release 3:
+Remove old column
+```
+
+This makes rollback safer.
 
 ---
 
 # Rollback Strategy
 
-If a release fails:
+A deployment should have a clear rollback plan.
+
+Possible rollback steps:
 
 ```text
-Deployment Failure
-        │
-        ▼
-Stop / Isolate New Version
-        │
-        ▼
-Deploy Previous Known-Good Image
-        │
-        ▼
-Run Health Checks
-        │
-        ▼
-Run Smoke Tests
-        │
-        ▼
-Monitor Logs
-        │
-        ▼
-Investigate Before Retrying
+Stop new deployment
+       │
+       ▼
+Deploy previous application version
+       │
+       ▼
+Check database compatibility
+       │
+       ▼
+Run health checks
+       │
+       ▼
+Run smoke tests
+       │
+       ▼
+Monitor logs
 ```
 
-Database restoration should only be performed when necessary and after understanding the impact.
+Database migrations should be designed carefully because application rollback and database rollback are not always symmetrical.
 
 ---
 
 # Production Incident Response
 
-## Scenario
+If a Venue Manager can see another restaurant's issue while other users are receiving `500` errors, the cross-venue data exposure is the highest-priority issue.
 
-A venue manager reports that they can see an issue belonging to another restaurant.
+## Immediate Actions
 
-At approximately the same time, some users receive HTTP 500 errors.
+1. Confirm the incident.
+2. Restrict or disable the affected endpoint if necessary.
+3. Determine whether cross-venue access is still possible.
+4. Preserve relevant logs.
+5. Investigate the failing requests.
+6. Identify the root cause.
+7. Prepare a minimal corrective release.
+8. Test the fix.
+9. Deploy safely.
+10. Monitor production.
 
-## Immediate Priority
-
-I would prioritize the **cross-venue data exposure** because it is a security and data-isolation issue.
-
-Immediate actions:
-
-1. Confirm the reported behaviour.
-2. Identify the affected endpoint and user.
-3. Prevent further unauthorized access if necessary.
-4. Preserve relevant application/access logs.
-5. Determine the scope of potential exposure.
-6. Reproduce the issue safely.
-7. Inspect authentication and authorization logic.
-8. Review database queries and venue filters.
-9. Investigate the HTTP 500 errors separately.
-10. Determine whether the errors originate from application code, database, permissions, configuration or deployment.
-11. Implement the security correction.
-12. Add or strengthen regression tests.
-13. Review the change.
-14. Deploy using a controlled release process.
-15. Monitor the application after deployment.
-
-The key principle is to stop unauthorized data access before treating the HTTP 500 errors as the primary issue.
+The data exposure should be treated as a security incident because users may be able to access data outside their authorised venue.
 
 ---
 
-# AI-Assisted Development
+# Investigating 500 Errors
 
-AI tools were used as development and review assistants during this exercise.
+I would check the application logs first and correlate errors using:
 
-## AI Tools Used
+* Timestamp
+* Request path
+* User ID
+* Venue ID
+* Request ID / correlation ID
+* Stack trace
 
-* ChatGPT
-* Codex / AI coding assistance
-
-## How AI Was Used
-
-AI assistance was used for:
-
-* Requirements analysis
-* Architecture discussion
-* Identifying security edge cases
-* API design review
-* Test scenario generation
-* Troubleshooting
-* Documentation improvement
-* Reviewing implementation approaches
-
-AI-generated suggestions were reviewed before being accepted.
-
-## Human Decision-Making
-
-The final architecture, implementation decisions, security model and testing approach remained my responsibility.
-
-One important example was venue-level authorization.
-
-A client-controlled `venueId` should not be trusted to determine what data a venue user can access.
-
-I chose to derive venue scope from the authenticated user's trusted context and enforce that restriction on the backend.
-
-I then verified this behaviour with automated tests covering cross-venue access, own-venue access, client-supplied venue filters and Head Office access.
-
-The purpose of using AI was to improve development speed and challenge my assumptions while keeping engineering responsibility and final decisions with me.
-
----
-
-# Development Workflow
-
-The development process followed these stages:
+Then determine whether the failure is caused by:
 
 ```text
-Requirements
+Application
     │
-    ▼
-Identify Assumptions
-    │
-    ▼
-Design Database and Authorization
-    │
-    ▼
-Implement Backend APIs
-    │
-    ▼
-Implement Frontend
-    │
-    ▼
-Add Security Controls
-    │
-    ▼
-Add Automated Tests
-    │
-    ▼
-Run Application Locally
-    │
-    ▼
-Review AI Suggestions
-    │
-    ▼
-Manual Testing
-    │
-    ▼
-Deployment Review
+    ├── Authentication
+    ├── Authorisation
+    ├── Business logic
+    ├── Database query
+    ├── External service
+    └── Deployment/configuration
 ```
+
+I would reproduce the problem locally or in a safe environment before applying the final fix.
+
+---
+
+# Unsafe Endpoint Code Review
+
+The following endpoint is unsafe:
+
+```javascript
+app.get('/api/issues', requireLogin, async (req, res) => {
+  const venueId = req.query.venueId;
+
+  const issues = await db.issue.findMany({
+    where: venueId ? { venueId } : {}
+  });
+
+  res.json(issues);
+});
+```
+
+## Problems
+
+The endpoint trusts a client-controlled `venueId`.
+
+A malicious user could change:
+
+```http
+GET /api/issues?venueId=another-venue
+```
+
+and potentially retrieve another venue's issues.
+
+An even bigger problem occurs when `venueId` is omitted:
+
+```http
+GET /api/issues
+```
+
+The query becomes:
+
+```javascript
+db.issue.findMany({
+  where: {}
+});
+```
+
+which may return issues across every venue.
+
+## Correct Approach
+
+The backend should derive the user's venue from the authenticated identity.
+
+Conceptually:
+
+```javascript
+const user = req.user;
+
+const issues = await db.issue.findMany({
+  where: {
+    venueId: user.venueId
+  }
+});
+```
+
+For Head Office administrators, broader access can be explicitly allowed based on their role.
+
+The important principle is:
+
+> Authorisation must be enforced by the server, not by client-supplied filtering.
 
 ---
 
 # Code Review Checklist
 
-Before accepting AI-generated or manually written changes, I would review:
+Before accepting AI-generated or developer-written code, I would review:
 
-### Functionality
+## Correctness
 
 * Does the implementation satisfy the requirements?
-* Are validation rules correct?
-* Are error responses appropriate?
 * Are edge cases handled?
+* Are errors handled correctly?
 
-### Security
+## Security
 
-* Is authentication required?
-* Is authorization enforced on the backend?
-* Can a user access another venue's issues?
-* Can a client manipulate `venueId`?
-* Can a user update another venue's issue?
-* Are uploaded files validated?
-* Are secrets excluded from source control?
+* Authentication
+* Authorisation
+* Venue isolation
+* Input validation
+* SQL/ORM query safety
+* File upload validation
+* Secrets management
 
-### Database
+## Performance
 
-* Are migrations correct?
-* Are relationships correct?
-* Are indexes appropriate?
-* Could queries return excessive data?
-* Are transactions required?
+* Database indexes
+* Pagination
+* Large response handling
+* N+1 queries
+* Caching where appropriate
 
-### Dependencies
+## Maintainability
 
-I would review:
+* Clear naming
+* Small responsibilities
+* Appropriate abstractions
+* Consistent project conventions
 
-```bash
-npm ls
-```
+## Testing
 
-and inspect:
+* Unit tests
+* Integration tests
+* Security tests
+* Error cases
+* Regression tests
+
+---
+
+# AI-Assisted Development
+
+AI coding tools were used during development as permitted by the assessment.
+
+The AI tools were used for:
+
+* Generating initial implementation ideas
+* Creating boilerplate
+* Suggesting API structures
+* Reviewing potential security issues
+* Generating test scenarios
+* Improving documentation
+* Troubleshooting development issues
+
+AI-generated code was not accepted blindly.
+
+The implementation was reviewed manually, tested locally and checked against the assessment requirements.
+
+The final responsibility for the code, security decisions and technical choices remained with me.
+
+---
+
+# AI Coding-Agent Instructions
+
+The initial AI coding-agent instruction focused on implementing the issue-management functionality while following the existing application's architecture and security model.
+
+The instruction included requirements around:
+
+* Issue CRUD operations
+* Venue-level access control
+* Authentication
+* Assignment
+* Priority
+* Status
+* Due dates
+* Comments
+* Database migrations
+* Tests
+* Existing project conventions
+
+Follow-up instructions were used to:
+
+* Review generated code
+* Identify security issues
+* Add venue-scope protection
+* Add automated tests
+* Verify error handling
+* Improve documentation
+
+---
+
+# AI Recommendations That Were Reviewed
+
+AI-generated suggestions were treated as recommendations rather than final decisions.
+
+Examples of decisions requiring human review included:
+
+* Whether client-provided venue IDs should be trusted
+* How cross-venue access should behave
+* How photographs should be stored
+* How overdue notifications should be scheduled
+* How database migrations should be deployed
+* How rollback should be handled
+
+The final approach prioritised security, maintainability and operational safety.
+
+---
+
+# Development Workflow
+
+The development process followed:
 
 ```text
-package.json
-package-lock.json
+Requirements
+     │
+     ▼
+Clarify assumptions
+     │
+     ▼
+Design
+     │
+     ▼
+AI-assisted implementation
+     │
+     ▼
+Human code review
+     │
+     ▼
+Automated testing
+     │
+     ▼
+Manual testing
+     │
+     ▼
+Security review
+     │
+     ▼
+Documentation
 ```
-
-I would check whether each newly added dependency is necessary, maintained and appropriate for the feature.
-
-I would also look for unexpected packages, duplicate dependencies or packages unrelated to the requested functionality.
-
-### Testing
-
-Run:
-
-```bash
-npm test
-```
-
-and manually test:
-
-* Login
-* Issue creation
-* Issue listing
-* Issue update
-* Issue reassignment
-* Venue isolation
-* Head Office access
-* Invalid requests
-* Unauthorized requests
-* Email generation
 
 ---
 
 # Useful Commands
 
-## Install Dependencies
+## Start Docker Services
 
 ```bash
-npm install
+docker compose up -d
+```
+
+## Stop Docker Services
+
+```bash
+docker compose down
+```
+
+## Run Migrations
+
+```bash
+npm run migration:run
+```
+
+## Seed Database
+
+```bash
+npm run seed
 ```
 
 ## Start Development Server
@@ -966,43 +1080,7 @@ npm run start:dev
 npm test
 ```
 
-## Run Database Migration
-
-```bash
-npm run migration:run
-```
-
-## Seed Database
-
-```bash
-npm run seed
-```
-
-## Start Docker Services
-
-```bash
-docker compose up -d
-```
-
-## Stop Docker Services
-
-```bash
-docker compose down
-```
-
-## View Docker Logs
-
-```bash
-docker compose logs
-```
-
-## View PostgreSQL Logs
-
-```bash
-docker compose logs postgres
-```
-
-## Check Running Containers
+## Check Docker Containers
 
 ```bash
 docker compose ps
@@ -1012,184 +1090,155 @@ docker compose ps
 
 # Troubleshooting
 
-## PostgreSQL is not running
+## PostgreSQL Connection Error
 
-```bash
-docker compose ps
-docker compose up -d
-```
-
-Check PostgreSQL logs:
-
-```bash
-docker compose logs postgres
-```
-
----
-
-## Migration fails
-
-Verify PostgreSQL is running:
+Check that PostgreSQL is running:
 
 ```bash
 docker compose ps
 ```
 
-Then inspect:
+Check the database configuration in `.env`.
+
+---
+
+## Migration Error
+
+Verify:
+
+* PostgreSQL is running
+* Database credentials are correct
+* Database exists
+* Environment variables are loaded
+
+Then run:
 
 ```bash
-docker compose logs postgres
+npm run migration:run
 ```
 
 ---
 
-## Port 3001 is already in use
+## Port Already in Use
+
+Check which process is using the required port.
+
+For example:
 
 ```bash
 lsof -i :3001
 ```
 
-Stop the conflicting process if appropriate and restart the backend.
+Stop the conflicting process or configure another application port.
 
 ---
 
-## npm installation problems
+## MailHog Not Showing Emails
+
+Check that the MailHog container is running:
 
 ```bash
-rm -rf node_modules
-npm install
+docker compose ps
 ```
 
-Avoid deleting `package-lock.json` unless there is a specific reason to regenerate dependencies.
+Then trigger an email-producing action and refresh the MailHog dashboard.
 
 ---
 
 # Git and Secret Safety
 
-Before committing:
-
-```bash
-git status
-```
-
-Review changes:
-
-```bash
-git diff
-```
-
-Review staged changes:
-
-```bash
-git diff --cached
-```
-
-Never commit:
+The following should never be committed:
 
 ```text
 .env
-JWT tokens
 Passwords
+JWT secrets
 API keys
-Private keys
-Production credentials
-node_modules
+Private credentials
+Production database credentials
+Private storage credentials
 ```
 
-Recommended `.gitignore` entries:
-
-```text
-node_modules/
-.env
-.env.*
-!.env.example
-dist/
-build/
-coverage/
-*.log
-npm-debug.log*
-.DS_Store
-.vscode/
-.idea/
-*.pem
-*.key
-*.crt
-```
+Use `.env.example` to document required configuration without exposing real secrets.
 
 ---
 
 # Validation Checklist
 
-Before considering the feature ready:
+Before submitting or deploying the application, verify:
 
-* [ ] PostgreSQL starts successfully
-* [ ] MailHog starts successfully
-* [ ] Database migrations succeed
-* [ ] Seed data loads successfully
-* [ ] Backend starts successfully
-* [ ] Frontend starts successfully
-* [ ] Authentication works
-* [ ] Issue creation works
-* [ ] Issue listing works
-* [ ] Issue retrieval works
-* [ ] Issue update works
-* [ ] Issue reassignment works
-* [ ] Venue isolation works
-* [ ] Head Office access works
-* [ ] Cross-venue access is blocked
-* [ ] Client-supplied venue IDs cannot bypass authorization
-* [ ] Automated tests pass
-* [ ] MailHog receives development emails
-* [ ] No secrets are committed
-* [ ] Dependencies have been reviewed
-* [ ] Docker services are healthy
-* [ ] Production deployment/rollback approach has been reviewed
+* [x] Backend starts successfully
+* [x] PostgreSQL starts successfully
+* [x] Database migrations run successfully
+* [x] Seed data is available
+* [x] Issue list works
+* [x] Issue creation works
+* [x] Authentication is enforced
+* [x] Venue-level access is enforced
+* [x] Cross-venue access is blocked
+* [x] Head Office access works
+* [x] Automated security tests pass
+* [x] MailHog can capture emails
+* [x] Screenshots are included in documentation
+* [x] No secrets are committed
+* [x] README contains setup instructions
+* [x] Deployment and rollback strategy is documented
 
 ---
 
-# Summary
-
-TWBBQ Issues is a venue-aware issue management application designed around secure backend authorization and maintainable development practices.
-
-The most important security principle is:
-
-> **Authorization is enforced by the backend using trusted authentication context; the client cannot choose which venue's data it is authorized to access.**
-
-The project demonstrates:
-
-* Next.js frontend
-* NestJS backend
-* PostgreSQL
-* JWT authentication
-* Venue-level authorization
-* Head Office cross-venue access
-* Issue management
-* Database migrations
-* Docker Compose
-* MailHog email testing
-* Jest security tests
-* Production deployment considerations
-* AI-assisted development with human review and technical ownership
-
-## Quick Start
+# Quick Start
 
 ```bash
-cd backend
+git clone https://github.com/chetupatil/TwBBQ_Issue_repo.git
+
+cd TwBBQ_Issue_repo/backend
+
 npm install
+
 docker compose up -d
+
 npm run migration:run
+
 npm run seed
+
 npm run start:dev
 ```
 
-Run the test suite:
+Run tests:
 
 ```bash
 npm test
 ```
 
-Backend:
+---
 
-```text
-http://localhost:3001
-```
+# Summary
+
+This project demonstrates a secure venue issue-management approach with:
+
+* NestJS backend
+* Next.js frontend
+* PostgreSQL
+* JWT authentication
+* Venue-level authorisation
+* Issue management
+* Assignment
+* Priority and status
+* Due dates
+* Email testing with MailHog
+* Automated security testing
+* Docker-based development
+* Production deployment planning
+* Database migration safety
+* Rollback planning
+* AI-assisted development with human review
+
+The most important security principle implemented is that **venue access is determined by the authenticated user's permissions on the backend rather than by trusting client-provided venue identifiers**.
+
+---
+
+# Repository
+
+GitHub repository:
+
+https://github.com/chetupatil/TwBBQ_Issue_repo
